@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="architecture-title architecture-desc" id="architecture-overview-root">
+    <title id="architecture-title">Build the image, then run a repository</title>
+    <desc id="architecture-desc">Docker builds a reusable Python image, and each new container runs Git, pip, and the sample command using GitHub and PyPI.</desc><rect width="1280" height="720" fill="#f5f5f5"/>
+    <defs>
+      <style>#architecture-overview-root { --paper: #f5f5f5; --ink: #2d3142; --muted: #4f5d75; --accent: #bf4520; --link: #2e5aa8; --rule: #bfc0c0; --sans: 'Geist', system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; }
+      #architecture-overview-root { color: var(--ink); }
+      #architecture-overview-root a { color: var(--link); text-underline-offset: 3px; }
+      #architecture-overview-root nav { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 24px 0; }
+      #architecture-overview-root section { margin: 56px 0; scroll-margin-top: 24px; }
+      #architecture-overview-root .lead { font-size: 20px; max-width: 900px; }
+      #architecture-overview-root .diagram-container { width: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin: 24px 0; }
+      #architecture-overview-root .name { font-family: var(--sans); font-size: 16px; font-weight: 600; fill: var(--ink); }
+      #architecture-overview-root .sub { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+      #architecture-overview-root .tag { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; fill: #5a6580; }
+      #architecture-overview-root .group { font-family: var(--sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+      #architecture-overview-root .label { font-family: var(--mono); font-size: 12px; fill: var(--muted); text-anchor: middle; }
+      #architecture-overview-root .legend { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+      #architecture-overview-root .box { fill: var(--paper); stroke: var(--muted); stroke-width: 1.2; }
+      #architecture-overview-root .focal { fill: #f4e7e2; stroke: var(--accent); stroke-width: 1.5; }
+      #architecture-overview-root .external { fill: var(--paper); stroke: var(--link); stroke-width: 1.2; stroke-dasharray: 5 4; }
+      #architecture-overview-root .zone { fill: #ececec; stroke: var(--rule); stroke-width: 1; }
+      #architecture-overview-root .arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+      #architecture-overview-root .network { stroke: var(--link); }
+      #architecture-overview-root .return { stroke-dasharray: 5 4; }
+      #architecture-overview-root .notes { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; margin: 24px 0; }
+      #architecture-overview-root .notes > div { min-width: 0; }
+      #architecture-overview-root code { font-family: var(--mono); font-size: .86em; overflow-wrap: anywhere; }
+      #architecture-overview-root pre { background: #ececec; padding: 20px; border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font: 13px/1.7 var(--mono); }
+      #architecture-overview-root pre code { font-size: inherit; overflow-wrap: normal; }
+      #architecture-overview-root table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 20px 0; }
+      #architecture-overview-root td, #architecture-overview-root th { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+      #architecture-overview-root th { font-weight: 600; background: #ececec; }
+      #architecture-overview-root .table-wrap { overflow-x: auto; }
+      #architecture-overview-root .evidence { color: var(--muted); font-size: 14px; }
+      #architecture-overview-root .questions { max-width: 1000px; }
+      #architecture-overview-root .questions h3 { margin-top: 28px; }
+      @media (max-width: 720px) {
+#architecture-overview-root .notes { grid-template-columns: 1fr; gap: 12px; }
+      #architecture-overview-root td, #architecture-overview-root th { padding: 12px 8px; }
+}
+      @media print {
+#architecture-overview-root .diagram-container { overflow-x: visible; break-inside: avoid; }
+      #architecture-overview-root section { break-before: page; }
+      #architecture-overview-root nav { display: none; }
+}</style>
+      <marker id="architecture-overview-a-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+      <marker id="architecture-overview-a-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+    </defs>
+    <rect x="40" y="40" width="1200" height="184" rx="8" class="zone"/>
+    <text x="64" y="68" class="group">Image build · docker build -t repo-lab .</text>
+    <rect x="40" y="280" width="1200" height="228" rx="8" class="zone"/>
+    <text x="64" y="308" class="group">New container · docker run --rm repo-lab · user runner</text>
+    <path d="M384 152 H480" class="arrow" marker-end="url(#architecture-overview-a-arrow)"/>
+    <path d="M784 152 H880" class="arrow" marker-end="url(#architecture-overview-a-arrow)"/>
+    <path d="M1032 200 V280" class="arrow" marker-end="url(#architecture-overview-a-arrow)"/>
+    <rect x="1040" y="232" width="104" height="24" fill="#f5f5f5"/><text x="1092" y="249" class="label">INSTANTIATE</text>
+    <path d="M384 400 H480" class="arrow" marker-end="url(#architecture-overview-a-arrow)"/>
+    <path d="M784 400 H880" class="arrow" marker-end="url(#architecture-overview-a-arrow)"/>
+    <path d="M232 552 V460" class="arrow network" marker-end="url(#architecture-overview-a-link)"/>
+    <rect x="240" y="520" width="96" height="24" fill="#f5f5f5"/><text x="288" y="537" class="label">SOURCE</text>
+    <path d="M632 552 V460" class="arrow network" marker-end="url(#architecture-overview-a-link)"/>
+    <rect x="640" y="520" width="104" height="24" fill="#f5f5f5"/><text x="692" y="537" class="label">PACKAGES</text>
+    <rect x="80" y="104" width="304" height="96" rx="6" class="box"/>
+    <text x="100" y="128" class="tag">RECIPE</text><text x="100" y="152" class="name">Dockerfile + run-repo.sh</text><text x="100" y="176" class="sub">Local build context</text>
+    <rect x="480" y="104" width="304" height="96" rx="6" class="box"/>
+    <text x="500" y="128" class="tag">DOCKER BUILDER</text><text x="500" y="152" class="name">Prepare the toolchain</text><text x="500" y="176" class="sub">Base image + apt + Python venv</text>
+    <rect x="880" y="104" width="304" height="96" rx="6" class="focal"/>
+    <text x="900" y="128" class="tag">REUSABLE IMAGE</text><text x="900" y="152" class="name">repo-lab</text><text x="900" y="176" class="sub">Git · Python · pip · entrypoint</text>
+    <rect x="80" y="348" width="304" height="112" rx="6" class="box"/>
+    <text x="100" y="372" class="tag">1 · RETRIEVE</text><text x="100" y="400" class="name">Git clones the repository</text><text x="100" y="428" class="sub">/home/runner/repo</text>
+    <rect x="480" y="348" width="304" height="112" rx="6" class="focal"/>
+    <text x="500" y="372" class="tag">2 · INSTALL</text><text x="500" y="400" class="name">Pip installs the project</text><text x="500" y="428" class="sub">python -m pip install .</text>
+    <rect x="880" y="348" width="304" height="112" rx="6" class="box"/>
+    <text x="900" y="372" class="tag">3 · EXECUTE</text><text x="900" y="400" class="name">Python runs sample.main()</text><text x="900" y="428" class="sub">exec sample → stdout + exit code</text>
+    <rect x="80" y="552" width="304" height="72" rx="6" class="external"/>
+    <text x="100" y="580" class="name">GitHub</text><text x="100" y="604" class="sub">pypa/sampleproject · HTTPS</text>
+    <rect x="480" y="552" width="304" height="72" rx="6" class="external"/>
+    <text x="500" y="580" class="name">Python Package Index</text><text x="500" y="604" class="sub">Metadata + distributions · HTTPS</text>
+    <text x="880" y="576" class="sub">The entrypoint runs steps 1–3.</text><text x="880" y="600" class="sub">A failed step stops startup.</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Solid box = local component</text><text x="352" y="684" class="legend">Dashed box / blue arrow = external package or source delivery</text><text x="872" y="684" class="legend">Grey arrow = build or execution order</text>
+  </svg>

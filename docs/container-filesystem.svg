@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="filesystem-title filesystem-desc" id="container-filesystem-root">
+    <title id="filesystem-title">Container paths after installation</title>
+    <desc id="filesystem-desc">The source checkout is under home runner repo, while the virtual environment contains the Python launcher, sample command, installed sample and peppercorn modules, and distribution metadata.</desc>
+  <defs>
+      <style>#container-filesystem-root { --paper: #f5f5f5; --ink: #2d3142; --muted: #4f5d75; --accent: #bf4520; --link: #2e5aa8; --rule: #bfc0c0; --sans: 'Geist', system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; }
+      #container-filesystem-root { color: var(--ink); }
+      #container-filesystem-root a { color: var(--link); text-underline-offset: 3px; }
+      #container-filesystem-root nav { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 24px 0; }
+      #container-filesystem-root section { margin: 56px 0; scroll-margin-top: 24px; }
+      #container-filesystem-root .lead { font-size: 20px; max-width: 900px; }
+      #container-filesystem-root .diagram-container { width: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin: 24px 0; }
+      #container-filesystem-root .name { font-family: var(--sans); font-size: 16px; font-weight: 600; fill: var(--ink); }
+      #container-filesystem-root .sub { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+      #container-filesystem-root .tag { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; fill: #5a6580; }
+      #container-filesystem-root .group { font-family: var(--sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+      #container-filesystem-root .label { font-family: var(--mono); font-size: 12px; fill: var(--muted); text-anchor: middle; }
+      #container-filesystem-root .legend { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+      #container-filesystem-root .box { fill: var(--paper); stroke: var(--muted); stroke-width: 1.2; }
+      #container-filesystem-root .focal { fill: #f4e7e2; stroke: var(--accent); stroke-width: 1.5; }
+      #container-filesystem-root .external { fill: var(--paper); stroke: var(--link); stroke-width: 1.2; stroke-dasharray: 5 4; }
+      #container-filesystem-root .zone { fill: #ececec; stroke: var(--rule); stroke-width: 1; }
+      #container-filesystem-root .arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+      #container-filesystem-root .network { stroke: var(--link); }
+      #container-filesystem-root .return { stroke-dasharray: 5 4; }
+      #container-filesystem-root .notes { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; margin: 24px 0; }
+      #container-filesystem-root .notes > div { min-width: 0; }
+      #container-filesystem-root code { font-family: var(--mono); font-size: .86em; overflow-wrap: anywhere; }
+      #container-filesystem-root pre { background: #ececec; padding: 20px; border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font: 13px/1.7 var(--mono); }
+      #container-filesystem-root pre code { font-size: inherit; overflow-wrap: normal; }
+      #container-filesystem-root table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 20px 0; }
+      #container-filesystem-root td, #container-filesystem-root th { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+      #container-filesystem-root th { font-weight: 600; background: #ececec; }
+      #container-filesystem-root .table-wrap { overflow-x: auto; }
+      #container-filesystem-root .evidence { color: var(--muted); font-size: 14px; }
+      #container-filesystem-root .questions { max-width: 1000px; }
+      #container-filesystem-root .questions h3 { margin-top: 28px; }
+      @media (max-width: 720px) {
+#container-filesystem-root .notes { grid-template-columns: 1fr; gap: 12px; }
+      #container-filesystem-root td, #container-filesystem-root th { padding: 12px 8px; }
+}
+      @media print {
+#container-filesystem-root .diagram-container { overflow-x: visible; break-inside: avoid; }
+      #container-filesystem-root section { break-before: page; }
+      #container-filesystem-root nav { display: none; }
+}</style>
+  </defs><rect width="1280" height="720" fill="#f5f5f5"/>
+    <rect x="40" y="48" width="1200" height="592" rx="8" fill="#f1f1f1" stroke="#bfc0c0"/>
+    <text x="64" y="80" class="group">Container filesystem · merged image files and per-container writes</text>
+    <rect x="72" y="112" width="1136" height="428" rx="8" fill="#ececec" stroke="#4f5d75"/>
+    <text x="96" y="144" class="sub">/home/runner/</text>
+    <rect x="104" y="176" width="416" height="332" rx="8" fill="#f5f5f5" stroke="#4f5d75"/>
+    <text x="128" y="208" class="name">repo/</text><text x="128" y="240" class="sub">Created by git clone at startup</text>
+    <text x="128" y="296" class="sub">pyproject.toml</text><text x="128" y="328" class="sub">src/sample/__init__.py</text><text x="128" y="360" class="sub">.git/</text><text x="128" y="392" class="sub">…other repository files</text>
+    <text x="128" y="468" class="legend">This is the working directory during installation and launch.</text>
+    <rect x="552" y="176" width="624" height="332" rx="8" fill="#f5f5f5" stroke="#4f5d75"/>
+    <text x="576" y="208" class="name">venv/</text><text x="576" y="232" class="sub">Created at image build · populated further at startup</text>
+    <rect x="584" y="256" width="560" height="80" rx="6" class="box"/>
+    <text x="608" y="284" class="name">bin/</text><text x="608" y="312" class="sub">python · pip · sample ← generated launcher</text>
+    <rect x="584" y="360" width="560" height="116" rx="6" class="focal"/>
+    <text x="608" y="388" class="name">lib/python3.12/site-packages/</text><text x="608" y="416" class="sub">sample/ · peppercorn/</text><text x="608" y="444" class="sub">sampleproject-4.0.0.dist-info/ · peppercorn-0.6.dist-info/</text>
+    <text x="72" y="576" class="sub">/tmp/pip-*   Temporary downloads, build environments, and wheel staging</text>
+    <text x="72" y="612" class="legend">Pip normally cleans temporary work after installation. --no-cache-dir disables its persistent cache.</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Containment = directory hierarchy</text><text x="432" y="684" class="legend">Orange = installed Python package location</text><text x="872" y="684" class="legend">Selected paths from the live container</text>
+  </svg>

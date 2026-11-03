@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From repository to running process</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  :root { --paper: #f5f5f5; --ink: #2d3142; --muted: #4f5d75; --accent: #bf4520; --link: #2e5aa8; --rule: #bfc0c0; --sans: 'Geist', system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.65 var(--sans); }
+  main { max-width: 1392px; margin: auto; padding: 56px 32px 80px; }
+  header { max-width: 900px; margin-bottom: 44px; }
+  .eyebrow { color: var(--muted); font: 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  h1 { font: 56px/1.06 var(--serif); margin: 20px 0; }
+  h2 { font: 36px/1.15 var(--serif); margin: 12px 0 16px; }
+  h3 { font-size: 18px; margin: 0 0 8px; }
+  p { margin: 8px 0 16px; }
+  a { color: var(--link); text-underline-offset: 3px; }
+  nav { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 24px 0; }
+  section { margin: 56px 0; scroll-margin-top: 24px; }
+  .lead { font-size: 20px; max-width: 900px; }
+  .summary { border-left: 4px solid var(--accent); padding: 12px 24px; margin: 28px 0; max-width: 1050px; }
+  .diagram-container { width: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin: 24px 0; }
+  svg { display: block; width: 100%; min-width: 1280px; background: var(--paper); }
+  svg .name { font-family: var(--sans); font-size: 16px; font-weight: 600; fill: var(--ink); }
+  svg .sub { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+  svg .tag { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; fill: #5a6580; }
+  svg .group { font-family: var(--sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+  svg .label { font-family: var(--mono); font-size: 12px; fill: var(--muted); text-anchor: middle; }
+  svg .legend { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+  svg .box { fill: var(--paper); stroke: var(--muted); stroke-width: 1.2; }
+  svg .focal { fill: #f4e7e2; stroke: var(--accent); stroke-width: 1.5; }
+  svg .external { fill: var(--paper); stroke: var(--link); stroke-width: 1.2; stroke-dasharray: 5 4; }
+  svg .zone { fill: #ececec; stroke: var(--rule); stroke-width: 1; }
+  svg .arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+  svg .network { stroke: var(--link); }
+  svg .return { stroke-dasharray: 5 4; }
+  .notes { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; margin: 24px 0; }
+  .notes > div { min-width: 0; }
+  code { font-family: var(--mono); font-size: .86em; overflow-wrap: anywhere; }
+  pre { background: #ececec; padding: 20px; border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font: 13px/1.7 var(--mono); }
+  pre code { font-size: inherit; overflow-wrap: normal; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 20px 0; }
+  td, th { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; background: #ececec; }
+  .table-wrap { overflow-x: auto; }
+  .evidence { color: var(--muted); font-size: 14px; }
+  .questions { max-width: 1000px; }
+  .questions h3 { margin-top: 28px; }
+  footer { border-top: 1px solid var(--rule); padding-top: 20px; color: var(--muted); font-size: 13px; }
+  @media (max-width: 720px) { main { padding: 28px 16px; } h1 { font-size: 42px; } .notes { grid-template-columns: 1fr; gap: 12px; } td, th { padding: 12px 8px; } }
+  @media print { main { padding: 0; } .diagram-container { overflow-x: visible; break-inside: avoid; } svg { min-width: 0; } section { break-before: page; } header { margin-bottom: 0; } nav { display: none; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="eyebrow">Docker repository lab · Engineering walkthrough</div>
+  <h1>From repository<br>to running process</h1>
+  <p class="lead">Docker supplies the execution environment. Git retrieves the source. Pip reads package metadata, resolves dependencies, and installs code. Python executes the installed application.</p>
+  <p class="evidence">Grounded in the committed Docker lab and a fresh container inspection on November 2, 2026. Sample checkout <code>621e4974ca25ce531773def586ba3ed8e736b3fc</code>.</p>
+</header>
+<nav aria-label="Walkthrough sections"><a href="#architecture">1. Overall architecture</a><a href="#installation">2. Dependency installation</a><a href="#filesystem">3. Filesystem</a><a href="#explain">Explain it to an engineer</a><a href="#inspect">Inspect it yourself</a></nav>
+
+<section id="architecture">
+  <div class="eyebrow">01 · Architecture · Build once, start fresh containers</div>
+  <h2>Two phases with different responsibilities</h2>
+  <p>The Dockerfile creates a reusable image with Git, Python 3.12, pip, a virtual environment, and an entrypoint script. Starting a container invokes that script, which performs the clone and installation before launching the application.</p>
+  <div class="diagram-container">
+  <svg viewBox="0 0 1280 720" role="img" aria-labelledby="architecture-title architecture-desc">
+    <title id="architecture-title">Build the image, then run a repository</title>
+    <desc id="architecture-desc">Docker builds a reusable Python image, and each new container runs Git, pip, and the sample command using GitHub and PyPI.</desc>
+    <defs>
+      <marker id="a-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+      <marker id="a-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+    </defs>
+    <rect x="40" y="40" width="1200" height="184" rx="8" class="zone"/>
+    <text x="64" y="68" class="group">Image build · docker build -t repo-lab .</text>
+    <rect x="40" y="280" width="1200" height="228" rx="8" class="zone"/>
+    <text x="64" y="308" class="group">New container · docker run --rm repo-lab · user runner</text>
+    <path d="M384 152 H480" class="arrow" marker-end="url(#a-arrow)"/>
+    <path d="M784 152 H880" class="arrow" marker-end="url(#a-arrow)"/>
+    <path d="M1032 200 V280" class="arrow" marker-end="url(#a-arrow)"/>
+    <rect x="1040" y="232" width="104" height="24" fill="#f5f5f5"/><text x="1092" y="249" class="label">INSTANTIATE</text>
+    <path d="M384 400 H480" class="arrow" marker-end="url(#a-arrow)"/>
+    <path d="M784 400 H880" class="arrow" marker-end="url(#a-arrow)"/>
+    <path d="M232 552 V460" class="arrow network" marker-end="url(#a-link)"/>
+    <rect x="240" y="520" width="96" height="24" fill="#f5f5f5"/><text x="288" y="537" class="label">SOURCE</text>
+    <path d="M632 552 V460" class="arrow network" marker-end="url(#a-link)"/>
+    <rect x="640" y="520" width="104" height="24" fill="#f5f5f5"/><text x="692" y="537" class="label">PACKAGES</text>
+    <rect x="80" y="104" width="304" height="96" rx="6" class="box"/>
+    <text x="100" y="128" class="tag">RECIPE</text><text x="100" y="152" class="name">Dockerfile + run-repo.sh</text><text x="100" y="176" class="sub">Local build context</text>
+    <rect x="480" y="104" width="304" height="96" rx="6" class="box"/>
+    <text x="500" y="128" class="tag">DOCKER BUILDER</text><text x="500" y="152" class="name">Prepare the toolchain</text><text x="500" y="176" class="sub">Base image + apt + Python venv</text>
+    <rect x="880" y="104" width="304" height="96" rx="6" class="focal"/>
+    <text x="900" y="128" class="tag">REUSABLE IMAGE</text><text x="900" y="152" class="name">repo-lab</text><text x="900" y="176" class="sub">Git · Python · pip · entrypoint</text>
+    <rect x="80" y="348" width="304" height="112" rx="6" class="box"/>
+    <text x="100" y="372" class="tag">1 · RETRIEVE</text><text x="100" y="400" class="name">Git clones the repository</text><text x="100" y="428" class="sub">/home/runner/repo</text>
+    <rect x="480" y="348" width="304" height="112" rx="6" class="focal"/>
+    <text x="500" y="372" class="tag">2 · INSTALL</text><text x="500" y="400" class="name">Pip installs the project</text><text x="500" y="428" class="sub">python -m pip install .</text>
+    <rect x="880" y="348" width="304" height="112" rx="6" class="box"/>
+    <text x="900" y="372" class="tag">3 · EXECUTE</text><text x="900" y="400" class="name">Python runs sample.main()</text><text x="900" y="428" class="sub">exec sample → stdout + exit code</text>
+    <rect x="80" y="552" width="304" height="72" rx="6" class="external"/>
+    <text x="100" y="580" class="name">GitHub</text><text x="100" y="604" class="sub">pypa/sampleproject · HTTPS</text>
+    <rect x="480" y="552" width="304" height="72" rx="6" class="external"/>
+    <text x="500" y="580" class="name">Python Package Index</text><text x="500" y="604" class="sub">Metadata + distributions · HTTPS</text>
+    <text x="880" y="576" class="sub">The entrypoint runs steps 1–3.</text><text x="880" y="600" class="sub">A failed step stops startup.</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Solid box = local component</text><text x="352" y="684" class="legend">Dashed box / blue arrow = external package or source delivery</text><text x="872" y="684" class="legend">Grey arrow = build or execution order</text>
+  </svg>
+  </div>
+  <div class="notes">
+    <div><h3>What Docker provides</h3><p>Docker Desktop hosts the Linux engine on this Windows machine. The engine creates the container's process, network, and filesystem environment from the image. The Dockerfile explicitly chooses Python and installs Git and certificate authorities with Debian's <code>apt</code> package manager.</p><p>The image build obtains the Python base image from Docker Hub and OS packages from Debian repositories. The diagram groups those downloads into the builder box.</p></div>
+    <div><h3>What our script provides</h3><p><code>run-repo.sh</code> reads <code>REPO_URL</code>, optionally selects a branch or tag using <code>REPO_REF</code>, clones into <code>repo</code>, changes directory, prints the commit, runs pip, and executes the command. The Dockerfile supplies <code>sample</code> as the default command.</p><p><code>set -eu</code> stops on a failed clone or install. <code>exec "$@"</code> replaces the shell with the requested program, so its output and exit status become the container's output and exit status.</p></div>
+  </div>
+  <p class="evidence">Implementation references are <a href="../Dockerfile">Dockerfile</a> and <a href="../run-repo.sh">run-repo.sh</a>. Container execution model described in <a href="https://docs.docker.com/engine/containers/run/">Docker's container documentation</a>.</p>
+</section>
+
+<section id="installation">
+  <div class="eyebrow">02 · Sequence · What pip does during startup</div>
+  <h2>The repository declares what to install</h2>
+  <p>The dot in <code>python -m pip install --no-cache-dir .</code> means “install the project in the current directory.” In this checkout, <code>pyproject.toml</code> supplies the build backend, runtime requirements, Python compatibility constraint, and executable entry point.</p>
+  <div class="notes">
+    <div><pre><code>[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sampleproject"
+version = "4.0.0"
+requires-python = ">=3.9"
+dependencies = ["peppercorn"]
+
+[project.scripts]
+sample = "sample:main"</code></pre></div>
+    <div><h3>Three declarations, three purposes</h3><p><strong>Build requirements</strong> supply tools needed to turn source into an installable wheel. Here that tool is setuptools.</p><p><strong>Runtime dependencies</strong> become installed libraries. Here pip selects <code>peppercorn 0.6</code>.</p><p><strong>Scripts</strong> describe generated commands. <code>sample = "sample:main"</code> asks the installer to create a launcher that imports <code>main</code> from the <code>sample</code> module and calls it.</p></div>
+  </div>
+  <p class="evidence">Selected fields from the inspected commit, with comments and unrelated metadata omitted. <a href="https://github.com/pypa/sampleproject/blob/621e4974ca25ce531773def586ba3ed8e736b3fc/pyproject.toml">Exact repository manifest</a>.</p>
+  <div class="diagram-container">
+  <svg viewBox="0 0 1280 720" role="img" aria-labelledby="installation-title installation-desc">
+    <title id="installation-title">Pip resolves, builds, downloads, and installs</title>
+    <desc id="installation-desc">Pip obtains setuptools, asks the build backend for metadata, resolves peppercorn through PyPI, builds the application wheel, and installs both into the virtual environment.</desc>
+    <defs>
+      <marker id="s-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+      <marker id="s-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+      <marker id="s-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#bf4520"/></marker>
+    </defs>
+    <text x="40" y="44" class="group">Time flows downward · source checkout already exists · happy path</text>
+    <g stroke="#bfc0c0" stroke-dasharray="3 3"><line x1="160" y1="136" x2="160" y2="636"/><line x1="432" y1="136" x2="432" y2="636"/><line x1="768" y1="136" x2="768" y2="636"/><line x1="1104" y1="136" x2="1104" y2="636"/></g>
+    <rect x="156" y="160" width="8" height="468" fill="#ececec" stroke="#4f5d75"/>
+    <rect x="428" y="272" width="8" height="48" fill="#ececec" stroke="#4f5d75"/>
+    <rect x="428" y="472" width="8" height="48" fill="#ececec" stroke="#4f5d75"/>
+    <path d="M164 176 H768" class="arrow network" marker-end="url(#s-link)"/>
+    <rect x="536" y="144" width="168" height="24" fill="#f5f5f5"/><text x="620" y="161" class="label">BUILD REQS</text>
+    <path d="M768 224 H164" class="arrow network return" marker-end="url(#s-link)"/>
+    <rect x="536" y="192" width="168" height="24" fill="#f5f5f5"/><text x="620" y="209" class="label">SETUPTOOLS</text>
+    <path d="M164 272 H428" class="arrow" marker-end="url(#s-arrow)"/>
+    <rect x="212" y="240" width="168" height="24" fill="#f5f5f5"/><text x="296" y="257" class="label">READ METADATA</text>
+    <path d="M428 320 H164" class="arrow return" marker-end="url(#s-arrow)"/>
+    <rect x="212" y="288" width="168" height="24" fill="#f5f5f5"/><text x="296" y="305" class="label">REQUIRES-DIST</text>
+    <path d="M164 372 H768" class="arrow network" marker-end="url(#s-link)"/>
+    <rect x="536" y="340" width="168" height="24" fill="#f5f5f5"/><text x="620" y="357" class="label">RESOLVE + GET</text>
+    <path d="M768 420 H164" class="arrow network return" marker-end="url(#s-link)"/>
+    <rect x="536" y="388" width="168" height="24" fill="#f5f5f5"/><text x="620" y="405" class="label">PEPPERCORN WHL</text>
+    <path d="M164 472 H428" class="arrow" marker-end="url(#s-arrow)"/>
+    <rect x="212" y="440" width="168" height="24" fill="#f5f5f5"/><text x="296" y="457" class="label">BUILD WHEEL</text>
+    <path d="M428 520 H164" class="arrow return" marker-end="url(#s-arrow)"/>
+    <rect x="212" y="488" width="168" height="24" fill="#f5f5f5"/><text x="296" y="505" class="label">APP WHEEL</text>
+    <path d="M164 572 H1104" fill="none" stroke="#bf4520" stroke-width="1.5" marker-end="url(#s-accent)"/>
+    <rect x="536" y="540" width="168" height="24" fill="#f5f5f5"/><text x="620" y="557" class="label">INSTALL BOTH</text>
+    <path d="M1104 620 H164" class="arrow return" marker-end="url(#s-arrow)"/>
+    <rect x="536" y="588" width="168" height="24" fill="#f5f5f5"/><text x="620" y="605" class="label">READY TO RUN</text>
+    <rect x="48" y="72" width="224" height="64" rx="6" class="box"/><text x="68" y="100" class="name">Pip installer</text><text x="68" y="124" class="sub">Inside the container</text>
+    <rect x="320" y="72" width="224" height="64" rx="6" class="box"/><text x="340" y="100" class="name">Setuptools backend</text><text x="340" y="124" class="sub">Temporary build env</text>
+    <rect x="656" y="72" width="224" height="64" rx="6" class="external"/><text x="676" y="100" class="name">PyPI + file hosting</text><text x="676" y="124" class="sub">External HTTPS service</text>
+    <rect x="992" y="72" width="224" height="64" rx="6" class="box"/><text x="1012" y="100" class="name">Runtime environment</text><text x="1012" y="124" class="sub">/home/runner/venv</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Solid arrow = request or write</text><text x="352" y="684" class="legend">Dashed arrow = response</text><text x="640" y="684" class="legend">Blue = HTTPS</text><text x="872" y="684" class="legend">Orange = final installation</text>
+  </svg>
+  </div>
+  <div class="notes">
+    <div><h3>How the dependency list is discovered</h3><p>Pip loads the build-system declaration and runs the backend's metadata hooks. Setuptools reads the project's metadata and emits dependency requirements such as <code>Requires-Dist: peppercorn</code>. Pip follows each requirement's metadata recursively, checks Python and platform compatibility, and chooses a consistent set of versions. Conflicts can cause backtracking or an installation error.</p><p>The current manifest leaves peppercorn's version unconstrained. The inspected run chose version 0.6. Peppercorn has no additional mandatory runtime dependencies in that inspected metadata. Optional extras are activated explicitly, for example <code>pip install '.[test]'</code> for this repo's test extra.</p><p class="evidence"><a href="https://pip.pypa.io/en/stable/topics/dependency-resolution/">Pip dependency resolution</a> · <a href="https://pip.pypa.io/en/stable/reference/build-system/">Build-system interface</a></p></div>
+    <div><h3>How bytes reach the container</h3><p>With pip's defaults, package discovery uses <code>https://pypi.org/simple</code>. Pip requests metadata and distribution files over HTTPS, typically fetching files from <code>files.pythonhosted.org</code>. An index URL can also be configured for a private package registry. Docker's outbound networking carries those requests.</p><p>A wheel (<code>.whl</code>) is an installable archive. Pip downloaded peppercorn's wheel and built a sampleproject wheel from the local checkout. Installation places package files and metadata in the virtual environment and creates the command launcher.</p><p class="evidence"><a href="https://pip.pypa.io/en/stable/cli/pip_install/">Pip install options and stages</a></p></div>
+  </div>
+  <p><strong>Diagram scope.</strong> The PyPI actor combines index discovery and file hosting. Each “resolve + get” arrow summarizes multiple requests. Temporary build setup and cleanup happen inside pip. The observed log follows this high-level order, while individual backend calls and downloads can vary with packaging tools and cached state.</p>
+</section>
+
+<section id="filesystem">
+  <div class="eyebrow">03 · Nested filesystem · Where the code lives</div>
+  <h2>Source checkout and installed packages have separate paths</h2>
+  <p>The image sets <code>PATH=/home/runner/venv/bin:…</code>. This makes <code>python</code> resolve to the virtual environment's interpreter and makes the generated <code>sample</code> command discoverable. Python uses its import search path to find the installed package modules.</p>
+  <div class="diagram-container">
+  <svg viewBox="0 0 1280 720" role="img" aria-labelledby="filesystem-title filesystem-desc">
+    <title id="filesystem-title">Container paths after installation</title>
+    <desc id="filesystem-desc">The source checkout is under home runner repo, while the virtual environment contains the Python launcher, sample command, installed sample and peppercorn modules, and distribution metadata.</desc>
+    <rect x="40" y="48" width="1200" height="592" rx="8" fill="#f1f1f1" stroke="#bfc0c0"/>
+    <text x="64" y="80" class="group">Container filesystem · merged image files and per-container writes</text>
+    <rect x="72" y="112" width="1136" height="428" rx="8" fill="#ececec" stroke="#4f5d75"/>
+    <text x="96" y="144" class="sub">/home/runner/</text>
+    <rect x="104" y="176" width="416" height="332" rx="8" fill="#f5f5f5" stroke="#4f5d75"/>
+    <text x="128" y="208" class="name">repo/</text><text x="128" y="240" class="sub">Created by git clone at startup</text>
+    <text x="128" y="296" class="sub">pyproject.toml</text><text x="128" y="328" class="sub">src/sample/__init__.py</text><text x="128" y="360" class="sub">.git/</text><text x="128" y="392" class="sub">…other repository files</text>
+    <text x="128" y="468" class="legend">This is the working directory during installation and launch.</text>
+    <rect x="552" y="176" width="624" height="332" rx="8" fill="#f5f5f5" stroke="#4f5d75"/>
+    <text x="576" y="208" class="name">venv/</text><text x="576" y="232" class="sub">Created at image build · populated further at startup</text>
+    <rect x="584" y="256" width="560" height="80" rx="6" class="box"/>
+    <text x="608" y="284" class="name">bin/</text><text x="608" y="312" class="sub">python · pip · sample ← generated launcher</text>
+    <rect x="584" y="360" width="560" height="116" rx="6" class="focal"/>
+    <text x="608" y="388" class="name">lib/python3.12/site-packages/</text><text x="608" y="416" class="sub">sample/ · peppercorn/</text><text x="608" y="444" class="sub">sampleproject-4.0.0.dist-info/ · peppercorn-0.6.dist-info/</text>
+    <text x="72" y="576" class="sub">/tmp/pip-*   Temporary downloads, build environments, and wheel staging</text>
+    <text x="72" y="612" class="legend">Pip normally cleans temporary work after installation. --no-cache-dir disables its persistent cache.</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Containment = directory hierarchy</text><text x="432" y="684" class="legend">Orange = installed Python package location</text><text x="872" y="684" class="legend">Selected paths from the live container</text>
+  </svg>
+  </div>
+  <div class="notes">
+    <div><h3>What the command actually executes</h3><p>The generated <code>/home/runner/venv/bin/sample</code> launcher begins with <code>#!/home/runner/venv/bin/python</code>. It imports <code>main</code> from <code>sample</code> and calls it. In the inspected run, <code>sample.__file__</code> resolved to the installed copy under <code>site-packages</code>.</p><p>The distribution name is <code>sampleproject</code>, its importable module is <code>sample</code>, and its command is also <code>sample</code>. These names come from packaging configuration. The demo's main function prints a message. A separate inspection confirmed that <code>peppercorn</code> imports successfully.</p></div>
+    <div><h3>How long the files last</h3><p>The image contains the starting filesystem. Git's checkout and pip's installation add files to that container's writable layer. Removing the container removes those writes. With <code>docker run --rm</code>, removal happens automatically when the main process exits.</p><p>The image remains available for the next run. Every new container repeats the clone and install. A named volume or bind mount would give selected paths a separate lifetime. This lab currently uses the container layer for its runtime files.</p><p class="evidence"><a href="https://docs.docker.com/engine/storage/">Docker storage model</a> · <a href="https://docs.python.org/3.12/library/venv.html">Python virtual environments</a> · <a href="https://pip.pypa.io/en/stable/topics/caching/">Pip cache behavior</a></p></div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Dependency category</th><th>Declared by</th><th>Installed by</th><th>Location and lifetime</th></tr></thead>
+    <tbody>
+      <tr><td>Python and base Linux files</td><td><code>FROM python:3.12-slim-bookworm</code></td><td>Base-image authors, retrieved by Docker</td><td>Image filesystem, including <code>/usr/local</code></td></tr>
+      <tr><td>Git, CA certificates, required OS libraries</td><td><code>apt-get install</code> in the Dockerfile</td><td>Debian apt during image build</td><td>System paths such as <code>/usr/bin</code>, <code>/usr/lib</code>, and <code>/etc/ssl</code>, saved in image layers</td></tr>
+      <tr><td>Build tooling such as setuptools</td><td><code>[build-system].requires</code></td><td>Pip before metadata and wheel generation</td><td>Temporary isolated build directory under <code>/tmp</code></td></tr>
+      <tr><td>Application and runtime Python libraries</td><td>Project metadata, including <code>[project].dependencies</code></td><td>Pip during container startup</td><td>Virtual environment's <code>site-packages</code> and <code>bin</code>, per-container writes</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="explain" class="questions">
+  <div class="eyebrow">Engineering discussion</div>
+  <h2>A concise explanation you can give</h2>
+  <div class="summary"><p>“We build a reusable Linux image with Python, Git, and a non-root runtime user. On startup, the entrypoint clones a selected Python repository and runs pip against the checkout. Pip obtains project metadata through the declared build backend, resolves the dependency graph against a package index, builds the local project into a wheel, and installs the application and dependencies into a virtual environment. The entrypoint then replaces itself with the application's command. The checkout and installed packages live in the container's writable layer, so this trial recreates them on each run.”</p></div>
+  <h3>How does it know about every dependency?</h3>
+  <p>Package authors declare requirements in package metadata. Pip follows those declarations transitively. Correct installation depends on complete metadata. A missing declaration can surface as an import error or missing library at runtime. OS packages and external services also require explicit setup.</p>
+  <h3>What makes this specific to Python?</h3>
+  <p>The image chooses Python 3.12 and the script chooses <code>pip install .</code>. Another repository needs a compatible runtime, supported installation command, and correct start command. A requirements-file project needs an explicit <code>pip install -r requirements.txt</code> step. A Node project typically uses its own manifest, lockfile, Node runtime, and package manager.</p>
+  <h3>Will two runs always install the same versions?</h3>
+  <p>The current default follows the remote repository's default branch and has unpinned dependency versions. The Python image tag is also mutable between builds. Reproducibility requires controlling the source revision, base image digest, build tools, and dependency versions or hashes. The current <code>REPO_REF</code> implementation supports a branch or tag through <code>git clone --branch</code>. Exact commit checkout would require an explicit fetch and checkout step.</p>
+  <h3>What changes for deployment?</h3>
+  <p>This trial places clone and install work at startup, making network access and package availability part of each launch. A deployable application image can instead contain the selected source and installed dependencies at build time. That moves resolution failures into the build and makes startup faster. Private repositories also need an explicit credential mechanism, and applications may require configuration, ports, persistent storage, or supporting services.</p>
+  <h3>What does successful execution prove?</h3>
+  <p>We observed a successful Git checkout, downloaded and installed peppercorn 0.6, built and installed sampleproject 4.0.0, imported both modules, and ran the sample command with exit code 0. This verifies the clone → install → execute path for this Python packaging example. Compatibility with another repo depends on that repo's own runtime contract.</p>
+</section>
+
+<section id="inspect">
+  <div class="eyebrow">Hands-on verification</div>
+  <h2>See the same evidence yourself</h2>
+  <p>From PowerShell, run the following command to clone, install, and open a shell in the checkout.</p>
+  <pre><code>docker run --rm -it repo-lab sh</code></pre>
+  <p>Inside that Linux shell, inspect the declarations, interpreter, installed metadata, import paths, and generated launcher.</p>
+  <pre><code>pwd
+git rev-parse HEAD
+cat pyproject.toml
+command -v python
+python -m pip show sampleproject peppercorn
+python -m pip check
+python -c 'import sample, peppercorn; print(sample.__file__); print(peppercorn.__file__)'
+cat /home/runner/venv/bin/sample
+sample
+exit</code></pre>
+  <p><code>pip show</code> reports package versions and installation locations. <code>pip check</code> checks declared dependency compatibility. <code>__file__</code> shows which file Python actually imported. Exiting removes this trial container because it was started with <code>--rm</code>.</p>
+</section>
+<footer>Three static, accessible SVG diagrams in one HTML file · Diagram Design light default · 1280 × 720 presentation-size canvases · Read diagrams left to right, except the sequence which reads top to bottom. Google Fonts supplies the editorial typefaces, with system fallbacks available. External package-service details follow official pip documentation. Paths, package versions, metadata, and launcher behavior were checked in a live container.</footer>
+</main>
+</body>
+</html>

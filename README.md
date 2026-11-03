@@ -24,6 +24,26 @@ Look for the checkout's commit hash, pip's installation of `peppercorn` and `sam
 
 The host needs Docker and network access. The experiment uses the container's own filesystem, without host directory mounts or credentials. Use a repository you trust since both installation and startup can execute its code.
 
+## Architecture
+
+The image contains Git, Python, pip, and the entrypoint script. Each new container clones the repository, installs the project and its dependencies, and starts the application's command.
+
+![Architecture showing the image build and the container's clone, install, and execute steps](docs/architecture-overview.svg)
+
+### How dependencies are discovered and downloaded
+
+Running `python -m pip install .` tells pip to install the project in the current directory. Pip uses the build backend declared in `pyproject.toml` to obtain package metadata, resolves the declared dependencies, and downloads compatible packages from the configured package index. In this example, setuptools builds the application and pip downloads peppercorn from PyPI.
+
+![Sequence showing pip obtaining build tools, reading dependency metadata, downloading peppercorn, and installing the application](docs/dependency-installation.svg)
+
+### Where the files go
+
+Git creates the source checkout at `/home/runner/repo`. Pip installs the application and runtime libraries into `/home/runner/venv/lib/python3.12/site-packages` and creates the `sample` launcher in `/home/runner/venv/bin`. Temporary build tools live under `/tmp`. Removing the container deletes its checkout and installed packages, while the reusable image remains available.
+
+![Container filesystem showing the source checkout, virtual environment, installed libraries, and command launcher](docs/container-filesystem.svg)
+
+The full walkthrough includes the actual dependency declarations, inspection commands, and engineering discussion notes. Open the HTML file locally in a browser to read it. [Full architectural walkthrough](docs/container-architecture.html).
+
 ## Explore interactively
 
 To inspect the installed sample, run `docker run --rm -it repo-lab sh`. You'll land in the checkout after installation. Try `pwd`, `git log -1 --oneline`, `python -m pip show peppercorn`, and `sample`. Type `exit` when finished.

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="installation-title installation-desc" id="dependency-installation-root">
+    <title id="installation-title">Pip resolves, builds, downloads, and installs</title>
+    <desc id="installation-desc">Pip obtains setuptools, asks the build backend for metadata, resolves peppercorn through PyPI, builds the application wheel, and installs both into the virtual environment.</desc><rect width="1280" height="720" fill="#f5f5f5"/>
+    <defs>
+      <style>#dependency-installation-root { --paper: #f5f5f5; --ink: #2d3142; --muted: #4f5d75; --accent: #bf4520; --link: #2e5aa8; --rule: #bfc0c0; --sans: 'Geist', system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; }
+      #dependency-installation-root { color: var(--ink); }
+      #dependency-installation-root a { color: var(--link); text-underline-offset: 3px; }
+      #dependency-installation-root nav { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 24px 0; }
+      #dependency-installation-root section { margin: 56px 0; scroll-margin-top: 24px; }
+      #dependency-installation-root .lead { font-size: 20px; max-width: 900px; }
+      #dependency-installation-root .diagram-container { width: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin: 24px 0; }
+      #dependency-installation-root .name { font-family: var(--sans); font-size: 16px; font-weight: 600; fill: var(--ink); }
+      #dependency-installation-root .sub { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+      #dependency-installation-root .tag { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; fill: #5a6580; }
+      #dependency-installation-root .group { font-family: var(--sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+      #dependency-installation-root .label { font-family: var(--mono); font-size: 12px; fill: var(--muted); text-anchor: middle; }
+      #dependency-installation-root .legend { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+      #dependency-installation-root .box { fill: var(--paper); stroke: var(--muted); stroke-width: 1.2; }
+      #dependency-installation-root .focal { fill: #f4e7e2; stroke: var(--accent); stroke-width: 1.5; }
+      #dependency-installation-root .external { fill: var(--paper); stroke: var(--link); stroke-width: 1.2; stroke-dasharray: 5 4; }
+      #dependency-installation-root .zone { fill: #ececec; stroke: var(--rule); stroke-width: 1; }
+      #dependency-installation-root .arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+      #dependency-installation-root .network { stroke: var(--link); }
+      #dependency-installation-root .return { stroke-dasharray: 5 4; }
+      #dependency-installation-root .notes { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; margin: 24px 0; }
+      #dependency-installation-root .notes > div { min-width: 0; }
+      #dependency-installation-root code { font-family: var(--mono); font-size: .86em; overflow-wrap: anywhere; }
+      #dependency-installation-root pre { background: #ececec; padding: 20px; border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font: 13px/1.7 var(--mono); }
+      #dependency-installation-root pre code { font-size: inherit; overflow-wrap: normal; }
+      #dependency-installation-root table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 20px 0; }
+      #dependency-installation-root td, #dependency-installation-root th { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+      #dependency-installation-root th { font-weight: 600; background: #ececec; }
+      #dependency-installation-root .table-wrap { overflow-x: auto; }
+      #dependency-installation-root .evidence { color: var(--muted); font-size: 14px; }
+      #dependency-installation-root .questions { max-width: 1000px; }
+      #dependency-installation-root .questions h3 { margin-top: 28px; }
+      @media (max-width: 720px) {
+#dependency-installation-root .notes { grid-template-columns: 1fr; gap: 12px; }
+      #dependency-installation-root td, #dependency-installation-root th { padding: 12px 8px; }
+}
+      @media print {
+#dependency-installation-root .diagram-container { overflow-x: visible; break-inside: avoid; }
+      #dependency-installation-root section { break-before: page; }
+      #dependency-installation-root nav { display: none; }
+}</style>
+      <marker id="dependency-installation-s-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+      <marker id="dependency-installation-s-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+      <marker id="dependency-installation-s-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#bf4520"/></marker>
+    </defs>
+    <text x="40" y="44" class="group">Time flows downward · source checkout already exists · happy path</text>
+    <g stroke="#bfc0c0" stroke-dasharray="3 3"><line x1="160" y1="136" x2="160" y2="636"/><line x1="432" y1="136" x2="432" y2="636"/><line x1="768" y1="136" x2="768" y2="636"/><line x1="1104" y1="136" x2="1104" y2="636"/></g>
+    <rect x="156" y="160" width="8" height="468" fill="#ececec" stroke="#4f5d75"/>
+    <rect x="428" y="272" width="8" height="48" fill="#ececec" stroke="#4f5d75"/>
+    <rect x="428" y="472" width="8" height="48" fill="#ececec" stroke="#4f5d75"/>
+    <path d="M164 176 H768" class="arrow network" marker-end="url(#dependency-installation-s-link)"/>
+    <rect x="536" y="144" width="168" height="24" fill="#f5f5f5"/><text x="620" y="161" class="label">BUILD REQS</text>
+    <path d="M768 224 H164" class="arrow network return" marker-end="url(#dependency-installation-s-link)"/>
+    <rect x="536" y="192" width="168" height="24" fill="#f5f5f5"/><text x="620" y="209" class="label">SETUPTOOLS</text>
+    <path d="M164 272 H428" class="arrow" marker-end="url(#dependency-installation-s-arrow)"/>
+    <rect x="212" y="240" width="168" height="24" fill="#f5f5f5"/><text x="296" y="257" class="label">READ METADATA</text>
+    <path d="M428 320 H164" class="arrow return" marker-end="url(#dependency-installation-s-arrow)"/>
+    <rect x="212" y="288" width="168" height="24" fill="#f5f5f5"/><text x="296" y="305" class="label">REQUIRES-DIST</text>
+    <path d="M164 372 H768" class="arrow network" marker-end="url(#dependency-installation-s-link)"/>
+    <rect x="536" y="340" width="168" height="24" fill="#f5f5f5"/><text x="620" y="357" class="label">RESOLVE + GET</text>
+    <path d="M768 420 H164" class="arrow network return" marker-end="url(#dependency-installation-s-link)"/>
+    <rect x="536" y="388" width="168" height="24" fill="#f5f5f5"/><text x="620" y="405" class="label">PEPPERCORN WHL</text>
+    <path d="M164 472 H428" class="arrow" marker-end="url(#dependency-installation-s-arrow)"/>
+    <rect x="212" y="440" width="168" height="24" fill="#f5f5f5"/><text x="296" y="457" class="label">BUILD WHEEL</text>
+    <path d="M428 520 H164" class="arrow return" marker-end="url(#dependency-installation-s-arrow)"/>
+    <rect x="212" y="488" width="168" height="24" fill="#f5f5f5"/><text x="296" y="505" class="label">APP WHEEL</text>
+    <path d="M164 572 H1104" fill="none" stroke="#bf4520" stroke-width="1.5" marker-end="url(#dependency-installation-s-accent)"/>
+    <rect x="536" y="540" width="168" height="24" fill="#f5f5f5"/><text x="620" y="557" class="label">INSTALL BOTH</text>
+    <path d="M1104 620 H164" class="arrow return" marker-end="url(#dependency-installation-s-arrow)"/>
+    <rect x="536" y="588" width="168" height="24" fill="#f5f5f5"/><text x="620" y="605" class="label">READY TO RUN</text>
+    <rect x="48" y="72" width="224" height="64" rx="6" class="box"/><text x="68" y="100" class="name">Pip installer</text><text x="68" y="124" class="sub">Inside the container</text>
+    <rect x="320" y="72" width="224" height="64" rx="6" class="box"/><text x="340" y="100" class="name">Setuptools backend</text><text x="340" y="124" class="sub">Temporary build env</text>
+    <rect x="656" y="72" width="224" height="64" rx="6" class="external"/><text x="676" y="100" class="name">PyPI + file hosting</text><text x="676" y="124" class="sub">External HTTPS service</text>
+    <rect x="992" y="72" width="224" height="64" rx="6" class="box"/><text x="1012" y="100" class="name">Runtime environment</text><text x="1012" y="124" class="sub">/home/runner/venv</text>
+    <line x1="40" y1="656" x2="1240" y2="656" stroke="#bfc0c0"/>
+    <text x="64" y="684" class="legend">Solid arrow = request or write</text><text x="352" y="684" class="legend">Dashed arrow = response</text><text x="640" y="684" class="legend">Blue = HTTPS</text><text x="872" y="684" class="legend">Orange = final installation</text>
+  </svg>
